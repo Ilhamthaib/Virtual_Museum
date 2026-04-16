@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Virtual Museum</string>
+    <string name="categories_title">Collections</string>
+    <string name="artworks_title">Œuvres</string>
+    <string name="favorites_title">Mes Favoris</string>
+    <string name="search_hint">Rechercher par titre ou artiste…</string>
+    <string name="btn_audio">▶  Audio Guide</string>
+    <string name="btn_3d">🥽  Voir en 3D / AR</string>
+    <string name="added_to_favorites">Ajouté aux favoris ❤</string>
+    <string name="removed_from_favorites">Retiré des favoris</string>
+    <string name="empty_favorites">Aucun favori pour l\'instant</string>
+</resources>

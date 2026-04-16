@@ -1,0 +1,23 @@
+# Gradle
+.gradle/
+build/
+
+# Local config
+local.properties
+
+# Android Studio
+.idea/
+*.iml
+
+# Generated files
+app/build/
+app/release/
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+app/src/main/assets/models/*.glb

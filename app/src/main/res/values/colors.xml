@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Brand -->
+    <color name="colorPrimary">#1A237E</color>
+    <color name="colorPrimaryDark">#0D1257</color>
+    <color name="colorPrimaryLight">#C5CAE9</color>
+    <color name="colorAccent">#FF6F00</color>
+
+    <!-- UI semantic -->
+    <color name="colorFavorite">#E53935</color>
+    <color name="colorAudio">#00695C</color>
+    <color name="color3D">#6A1B9A</color>
+    <color name="colorGrey">#9E9E9E</color>
+
+    <!-- Category thumbnail colors -->
+    <color name="cat1">#BBDEFB</color>
+    <color name="cat2">#E1BEE7</color>
+    <color name="cat3">#C8E6C9</color>
+    <color name="cat4">#FFF9C4</color>
+    <color name="cat5">#FCE4EC</color>
+</resources>
