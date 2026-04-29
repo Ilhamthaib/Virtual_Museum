@@ -11,6 +11,18 @@
     <uses-feature android:name="android.hardware.camera.ar"      android:required="false"/>
     <uses-feature android:name="android.hardware.camera.autofocus" android:required="false"/>
 
+    <!-- VR Cardboard -->
+    <uses-permission android:name="android.permission.NFC" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <uses-feature android:glEsVersion="0x00020000" android:required="true" />
+    <uses-feature android:name="android.hardware.sensor.accelerometer" android:required="true"/>
+    <uses-feature android:name="android.hardware.sensor.gyroscope" android:required="true"/>
+    <uses-feature android:name="android.software.vr.mode" android:required="false"/>
+    <uses-feature android:name="android.hardware.vr.high_performance" android:required="false"/>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -49,6 +61,26 @@
             android:exported="false"
             android:configChanges="orientation|screenSize|screenLayout"
             android:parentActivityName=".activities.ArtworkDetailsActivity"/>
+
+        <activity
+            android:name=".activities.QrCodeCaptureActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".activities.VrViewerActivity"/>
+
+        <!-- Activité VR Cardboard -->
+        <activity
+            android:name=".activities.VrViewerActivity"
+            android:exported="false"
+            android:screenOrientation="landscape"
+            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|screenLayout|uiMode|navigation"
+            android:enableVrMode="@string/gvr_vr_mode_component"
+            android:resizeableActivity="false"
+            android:parentActivityName=".activities.ArtworkDetailsActivity">
+            <intent-filter>
+                <category android:name="com.google.intent.category.CARDBOARD" />
+            </intent-filter>
+        </activity>
 
         <!-- ARCore optionnel : l'app reste installable sur appareils sans AR -->
         <meta-data

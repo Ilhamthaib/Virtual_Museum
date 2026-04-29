@@ -39,6 +39,7 @@ public class ArtworkDetailsActivity extends AppCompatActivity {
     private ImageButton    btnFavorite;
     private MaterialButton btnAudio;
     private MaterialButton btn3D;
+    private MaterialButton btnVR;
 
     private ArtworkEntity    artwork;
     private MuseumRepository repo;
@@ -84,6 +85,7 @@ public class ArtworkDetailsActivity extends AppCompatActivity {
         btnFavorite   = findViewById(R.id.btn_favorite);
         btnAudio      = findViewById(R.id.btn_audio);
         btn3D         = findViewById(R.id.btn_3d);
+        btnVR = findViewById(R.id.btn_vr);
     }
 
     private void populateData() {
@@ -103,6 +105,10 @@ public class ArtworkDetailsActivity extends AppCompatActivity {
         boolean has3D = artwork.has3DModel();
         btn3D.setEnabled(has3D);
         btn3D.setAlpha(has3D ? 1f : 0.4f);
+
+        boolean hasVR = artwork.has3DModel();
+        btnVR.setEnabled(hasVR);
+        btnVR.setAlpha(hasVR ? 1f : 0.4f);
     }
 
     /**
@@ -159,6 +165,17 @@ public class ArtworkDetailsActivity extends AppCompatActivity {
             Intent intent = new Intent(this, ArViewerActivity.class);
             intent.putExtra(ArViewerActivity.EXTRA_ARTWORK_ID,    artwork.getId());
             intent.putExtra(ArViewerActivity.EXTRA_ARTWORK_TITLE, artwork.getTitle());
+            startActivity(intent);
+        });
+
+        btnVR.setOnClickListener(v -> {
+            if (!artwork.has3DModel()) {
+                Toast.makeText(this, "Modèle 3D non disponible", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            Intent intent = new Intent(this, VrViewerActivity.class);
+            intent.putExtra(VrViewerActivity.EXTRA_ARTWORK_TITLE, artwork.getTitle());
+            intent.putExtra(VrViewerActivity.EXTRA_MODEL_URI, artwork.getModel3DUri());
             startActivity(intent);
         });
     }

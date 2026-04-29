@@ -27,6 +27,10 @@ import io.github.sceneview.ar.node.ArModelNode;
 import io.github.sceneview.ar.node.PlacementMode;
 import dev.romainguy.kotlin.math.Float3;
 
+import android.view.GestureDetector;
+import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
+
 
 public class ArViewerActivity extends AppCompatActivity {
 
@@ -50,6 +54,12 @@ public class ArViewerActivity extends AppCompatActivity {
     private float currentScale = 1.0f;
     private boolean isArMode = true;
     private boolean modelPlaced = false;
+    // Gestes
+    private GestureDetector      gestureDetector;
+    private ScaleGestureDetector scaleGestureDetector;
+    private float lastTouchX, lastTouchY;
+    private float rotationY = 0f;
+    private float rotationX = 0f;
     private String artworkTitle = "Œuvre";
     private String model3DUri = null;
 
@@ -255,7 +265,48 @@ public class ArViewerActivity extends AppCompatActivity {
 
     private void setup3DMode() {
         btnToggleMode.setText("🥽 Voir en AR");
-        setStatus("📱 Mode 3D — rotation et zoom");
+        setStatus("📱 Mode 3D — 1 doigt: rotation  •  Pinch: zoom");
+
+        // Détecteur de pinch (zoom)
+        scaleGestureDetector = new ScaleGestureDetector(this,
+                new ScaleGestureDetector.SimpleOnScaleGestureListener() {
+                    @Override
+                    public boolean onScale(ScaleGestureDetector detector) {
+                        if (modelNode != null) {
+                            currentScale *= detector.getScaleFactor();
+                            currentScale = Math.max(SCALE_MIN, Math.min(currentScale, SCALE_MAX));
+                            modelNode.setWorldScale(new Float3(currentScale, currentScale, currentScale));
+                        }
+                        return true;
+                    }
+                });
+
+        // Détecteur de glissement (rotation)
+        gestureDetector = new GestureDetector(this,
+                new GestureDetector.SimpleOnGestureListener() {
+                    @Override
+                    public boolean onScroll(MotionEvent e1, MotionEvent e2,
+                                            float distanceX, float distanceY) {
+                        if (modelNode != null && e2.getPointerCount() == 1) {
+                            rotationY -= distanceX * 0.5f;
+                            rotationX -= distanceY * 0.5f;
+                            rotationX = Math.max(-60f, Math.min(rotationX, 60f));
+                            modelNode.setWorldRotation(
+                                    new dev.romainguy.kotlin.math.Float3(rotationX, rotationY, 0f)
+                            );
+                        }
+                        return true;
+                    }
+                });
+
+        // Attache les gestes à la vue AR
+        arSceneView.setOnTouchListener((v, event) -> {
+            scaleGestureDetector.onTouchEvent(event);
+            if (!scaleGestureDetector.isInProgress()) {
+                gestureDetector.onTouchEvent(event);
+            }
+            return true;
+        });
     }
 
     // ─────────────────────────────────────────────────────────────────────────
@@ -313,13 +364,19 @@ public class ArViewerActivity extends AppCompatActivity {
             // Mode AR
             btnToggleMode.setText("📱 Voir en 3D");
             setStatus("🔍 Touchez une surface plane pour placer l'œuvre");
+            // Retirer le listener de gestes du mode 3D
+            arSceneView.setOnTouchListener(null);
+            setupArMode(); // rebranche le listener AR
             Toast.makeText(this, "Mode AR activé", Toast.LENGTH_SHORT).show();
         } else {
             // Mode 3D
             btnToggleMode.setText("🥽 Voir en AR");
             arSceneView.addChild(modelNode);
             modelPlaced = true;
-            setStatus("📱 Mode 3D — rotation et zoom");
+            // Réinitialiser la rotation accumulée
+            rotationX = 0f;
+            rotationY = 0f;
+            setup3DMode(); // branche les gestes
             Toast.makeText(this, "Mode 3D activé", Toast.LENGTH_SHORT).show();
         }
     }
